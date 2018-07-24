@@ -1,0 +1,3 @@
+ACTION!="add|change", GOTO="weatherstation_end"
+SUBSYSTEM=="usb", ATTRS{idVendor}=="1941", ATTRS{idProduct}=="8021", GROUP="weatherstation", OWNER="pi", TAG+="systemd", ENV{SYSTEMD_WANTS}="azureweather.service"
+LABEL="weatherstation_end"

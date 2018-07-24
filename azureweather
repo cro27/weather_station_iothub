@@ -1,0 +1,5 @@
+#! /bin/bash
+
+export PYTHONPATH=/home/pi/pywws-master/src:/home/pi/iot-hub-python-raspberrypi-client-app
+
+stdbuf -o L -e L /usr/bin/python /home/pi/iot-hub-python-raspberrypi-client-app/azweather.py >> /home/pi/weather/log/azureweather.log 2>&1 

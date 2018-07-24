@@ -1,0 +1,9 @@
+[Unit]
+Description=Azure Weather Station Logging
+After=time-sync.target
+
+[Service]
+Type=simple
+User=pi
+Restart=on-failure
+ExecStart=/usr/local/bin/azureweather
