@@ -4,7 +4,8 @@
 # Reads from previous hours weather data file and writes to a SQL Database table
 
 # Set access to Azure Blob storage - do this instead of mount as if already mounted whole notebook fails scheduled execution
-spark.conf.set("fs.azure.account.key.ocpmelb.blob.core.windows.net", "rRaP7kXOaTtmuKN3zRXi2rOXvULXwbRxm+nMB12ac9VFyLRRac1bTRH4huzf6jamjJacmB+x0VhLcZi2riGbTA==")
+blobkey = dbutils.secrets.get(scope = "sqldbscope", key = "ocpmelblob")
+spark.conf.set("fs.azure.account.key.ocpmelb.blob.core.windows.net", blobkey)
 
 from datetime import datetime, timedelta
 from time import strftime
@@ -49,14 +50,14 @@ weatherhour = spark.sql("SELECT v1.deviceID, v2.rec_datetime, v3.enq_utctime, v1
 sqlserver = 'pdumelb-svr1.database.windows.net'
 port = '1433'
 database = 'pdumelb_sqldb1'
-user = 'sqladmin'
-pswd = 'Welcome12345'
+sqlUsername = dbutils.secrets.get(scope = "sqldbscope", key = "sqluser")
+sqlPassword = dbutils.secrets.get(scope = "sqldbscope", key = "sqlpwd")
 
 print("Writing data to database: " + database)
   
 weatherhour.write \
-   .option('user', user) \
-   .option('password', pswd) \
+   .option('user', sqlUsername) \
+   .option('password', sqlPassword) \
    .jdbc('jdbc:sqlserver://' + sqlserver + ':' + port + ';database=' + database, 'dbo.Weather_hourly', mode = 'append' )
   
 print("Finished")
